@@ -1,0 +1,104 @@
+var _user$project$StringListController$tailOrNone = function (xs) {
+	var _p0 = _elm_lang$core$List$tail(xs);
+	if (_p0.ctor === 'Nothing') {
+		return {ctor: '[]'};
+	} else {
+		return _p0._0;
+	}
+};
+var _user$project$StringListController$removeAt = F2(
+	function (i, xs) {
+		return A2(
+			_elm_lang$core$Basics_ops['++'],
+			A2(_elm_lang$core$List$take, i, xs),
+			_user$project$StringListController$tailOrNone(
+				A2(_elm_lang$core$List$drop, i, xs)));
+	});
+var _user$project$StringListController$view = function (m) {
+	return _elm_lang$html$Html$text('');
+};
+var _user$project$StringListController$initCurrent = '';
+var _user$project$StringListController$initItems = {ctor: '[]'};
+var _user$project$StringListController$add_item = _elm_lang$core$Native_Platform.incomingPort(
+	'add_item',
+	_elm_lang$core$Json_Decode$null(
+		{ctor: '_Tuple0'}));
+var _user$project$StringListController$remove_item = _elm_lang$core$Native_Platform.incomingPort('remove_item', _elm_lang$core$Json_Decode$int);
+var _user$project$StringListController$set_current = _elm_lang$core$Native_Platform.incomingPort('set_current', _elm_lang$core$Json_Decode$string);
+var _user$project$StringListController$output_list = _elm_lang$core$Native_Platform.outgoingPort(
+	'output_list',
+	function (v) {
+		return _elm_lang$core$Native_List.toArray(v).map(
+			function (v) {
+				return v;
+			});
+	});
+var _user$project$StringListController$update = F2(
+	function (msg, m) {
+		var _p1 = msg;
+		switch (_p1.ctor) {
+			case 'AddItem':
+				var newItems = {ctor: '::', _0: m.current, _1: m.items};
+				return {
+					ctor: '_Tuple2',
+					_0: _elm_lang$core$Native_Utils.update(
+						m,
+						{items: newItems}),
+					_1: _user$project$StringListController$output_list(newItems)
+				};
+			case 'RemoveItem':
+				var newItems = A2(_user$project$StringListController$removeAt, _p1._0, m.items);
+				return {
+					ctor: '_Tuple2',
+					_0: _elm_lang$core$Native_Utils.update(
+						m,
+						{items: newItems}),
+					_1: _user$project$StringListController$output_list(newItems)
+				};
+			default:
+				return {
+					ctor: '_Tuple2',
+					_0: _elm_lang$core$Native_Utils.update(
+						m,
+						{current: _p1._0}),
+					_1: _elm_lang$core$Platform_Cmd$none
+				};
+		}
+	});
+var _user$project$StringListController$Model = F2(
+	function (a, b) {
+		return {current: a, items: b};
+	});
+var _user$project$StringListController$init = {
+	ctor: '_Tuple2',
+	_0: A2(_user$project$StringListController$Model, _user$project$StringListController$initCurrent, _user$project$StringListController$initItems),
+	_1: _user$project$StringListController$output_list(_user$project$StringListController$initItems)
+};
+var _user$project$StringListController$SetCurrent = function (a) {
+	return {ctor: 'SetCurrent', _0: a};
+};
+var _user$project$StringListController$RemoveItem = function (a) {
+	return {ctor: 'RemoveItem', _0: a};
+};
+var _user$project$StringListController$AddItem = {ctor: 'AddItem'};
+var _user$project$StringListController$subscriptions = function (_p2) {
+	return _elm_lang$core$Platform_Sub$batch(
+		{
+			ctor: '::',
+			_0: _user$project$StringListController$remove_item(_user$project$StringListController$RemoveItem),
+			_1: {
+				ctor: '::',
+				_0: _user$project$StringListController$add_item(
+					function (_p3) {
+						return _user$project$StringListController$AddItem;
+					}),
+				_1: {
+					ctor: '::',
+					_0: _user$project$StringListController$set_current(_user$project$StringListController$SetCurrent),
+					_1: {ctor: '[]'}
+				}
+			}
+		});
+};
+var _user$project$StringListController$main = _elm_lang$html$Html$program(
+	{init: _user$project$StringListController$init, view: _user$project$StringListController$view, update: _user$project$StringListController$update, subscriptions: _user$project$StringListController$subscriptions})();

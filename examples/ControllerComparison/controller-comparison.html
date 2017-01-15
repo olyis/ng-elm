@@ -1,0 +1,40 @@
+<html>
+    <head>
+        <title>Side by side Angular and Elm string list controllers</title>
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+        <script src="../../node_modules/angular/angular.min.js"></script>
+
+        <script src="../../ng-elm.js"></script>
+        <script src="../../ng-elm-extend.js"></script>
+
+        <script src="../elm/deploy/string-list.controller.js"></script>
+        <script src="../angular/elm-list.controller.js"></script>
+        <script src="../angular/ng-list.controller.js"></script>
+    </head>
+    <body>
+        <div class="container" ng-app="ngElm">
+            <div ng-controller="ElmListController as ctrl">
+                <h2>Elm List Controller</h2>
+                <input ng-model="ctrl.current"/>
+                <button class="btn btn-primary" ng-click="ctrl.add(null); ctrl.current = ''">Add</button>
+                <ul class="list-unstyled">
+                    <li ng-repeat="(i, item) in ctrl.items track by i">
+                        {{item}}
+                        <button class="btn btn-warning" ng-click="ctrl.remove(i)">Remove</button>
+                    </li>
+                </ul>
+            </div>
+            <div ng-controller="NgListController as ctrl">
+                <h2>Ng List Controller</h2>
+                <input ng-model="ctrl.current"/>
+                <button class="btn btn-primary" ng-click="ctrl.add(); ctrl.current = ''">Add</button>
+                <ul class="list-unstyled">
+                    <li ng-repeat="(i, item) in ctrl.items track by i">
+                        {{item}}
+                        <button class="btn btn-warning" ng-click="ctrl.remove(i)">Remove</button>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </body>
+</html>

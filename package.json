@@ -1,0 +1,15 @@
+{
+  "name": "ng-elm",
+  "version": "1.0.0",
+  "description": "Simple integration for elm in angular.js",
+  "main": "ng-elm.js",
+  "dependencies": {
+    "angular": "^1.6.0"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC"
+}
