@@ -1,0 +1,160 @@
+var _user$project$TodoController$toggleIf = F3(
+	function (i, j, t) {
+		return _elm_lang$core$Native_Utils.eq(i, j) ? _elm_lang$core$Native_Utils.update(
+			t,
+			{done: !t.done}) : t;
+	});
+var _user$project$TodoController$tailOrNone = function (xs) {
+	var _p0 = _elm_lang$core$List$tail(xs);
+	if (_p0.ctor === 'Nothing') {
+		return {ctor: '[]'};
+	} else {
+		return _p0._0;
+	}
+};
+var _user$project$TodoController$toggleAt = F2(
+	function (i, xs) {
+		return A2(
+			_elm_lang$core$List$indexedMap,
+			_user$project$TodoController$toggleIf(i),
+			xs);
+	});
+var _user$project$TodoController$removeAt = F2(
+	function (i, xs) {
+		return A2(
+			_elm_lang$core$Basics_ops['++'],
+			A2(_elm_lang$core$List$take, i, xs),
+			_user$project$TodoController$tailOrNone(
+				A2(_elm_lang$core$List$drop, i, xs)));
+	});
+var _user$project$TodoController$view = function (m) {
+	return _elm_lang$html$Html$text('');
+};
+var _user$project$TodoController$initTodos = {ctor: '[]'};
+var _user$project$TodoController$set_new = _elm_lang$core$Native_Platform.incomingPort('set_new', _elm_lang$core$Json_Decode$string);
+var _user$project$TodoController$add_new = _elm_lang$core$Native_Platform.incomingPort(
+	'add_new',
+	_elm_lang$core$Json_Decode$null(
+		{ctor: '_Tuple0'}));
+var _user$project$TodoController$remove = _elm_lang$core$Native_Platform.incomingPort('remove', _elm_lang$core$Json_Decode$int);
+var _user$project$TodoController$toggle = _elm_lang$core$Native_Platform.incomingPort('toggle', _elm_lang$core$Json_Decode$int);
+var _user$project$TodoController$output_list = _elm_lang$core$Native_Platform.outgoingPort(
+	'output_list',
+	function (v) {
+		return _elm_lang$core$Native_List.toArray(v).map(
+			function (v) {
+				return {item: v.item, done: v.done};
+			});
+	});
+var _user$project$TodoController$output_new = _elm_lang$core$Native_Platform.outgoingPort(
+	'output_new',
+	function (v) {
+		return v;
+	});
+var _user$project$TodoController$output = function (m) {
+	return _elm_lang$core$Platform_Cmd$batch(
+		{
+			ctor: '::',
+			_0: _user$project$TodoController$output_new(m.$new),
+			_1: {
+				ctor: '::',
+				_0: _user$project$TodoController$output_list(m.todos),
+				_1: {ctor: '[]'}
+			}
+		});
+};
+var _user$project$TodoController$Todo = F2(
+	function (a, b) {
+		return {item: a, done: b};
+	});
+var _user$project$TodoController$update = F2(
+	function (msg, m) {
+		var _p1 = msg;
+		switch (_p1.ctor) {
+			case 'SetNew':
+				var _p2 = _p1._0;
+				return {
+					ctor: '_Tuple2',
+					_0: _elm_lang$core$Native_Utils.update(
+						m,
+						{$new: _p2}),
+					_1: _user$project$TodoController$output_new(_p2)
+				};
+			case 'AddNew':
+				var newTodos = {
+					ctor: '::',
+					_0: A2(_user$project$TodoController$Todo, m.$new, false),
+					_1: m.todos
+				};
+				var newM = _elm_lang$core$Native_Utils.update(
+					m,
+					{todos: newTodos, $new: ''});
+				return {
+					ctor: '_Tuple2',
+					_0: newM,
+					_1: _user$project$TodoController$output(newM)
+				};
+			case 'RemoveTodo':
+				var newTodos = A2(_user$project$TodoController$removeAt, _p1._0, m.todos);
+				return {
+					ctor: '_Tuple2',
+					_0: _elm_lang$core$Native_Utils.update(
+						m,
+						{todos: newTodos}),
+					_1: _user$project$TodoController$output_list(newTodos)
+				};
+			default:
+				var newTodos = A2(_user$project$TodoController$toggleAt, _p1._0, m.todos);
+				return {
+					ctor: '_Tuple2',
+					_0: _elm_lang$core$Native_Utils.update(
+						m,
+						{todos: newTodos}),
+					_1: _user$project$TodoController$output_list(newTodos)
+				};
+		}
+	});
+var _user$project$TodoController$Model = F2(
+	function (a, b) {
+		return {$new: a, todos: b};
+	});
+var _user$project$TodoController$init = {
+	ctor: '_Tuple2',
+	_0: A2(_user$project$TodoController$Model, '', _user$project$TodoController$initTodos),
+	_1: _user$project$TodoController$output_list(_user$project$TodoController$initTodos)
+};
+var _user$project$TodoController$ToggleTodo = function (a) {
+	return {ctor: 'ToggleTodo', _0: a};
+};
+var _user$project$TodoController$RemoveTodo = function (a) {
+	return {ctor: 'RemoveTodo', _0: a};
+};
+var _user$project$TodoController$AddNew = {ctor: 'AddNew'};
+var _user$project$TodoController$SetNew = function (a) {
+	return {ctor: 'SetNew', _0: a};
+};
+var _user$project$TodoController$subscriptions = function (_p3) {
+	return _elm_lang$core$Platform_Sub$batch(
+		{
+			ctor: '::',
+			_0: _user$project$TodoController$set_new(_user$project$TodoController$SetNew),
+			_1: {
+				ctor: '::',
+				_0: _user$project$TodoController$add_new(
+					function (_p4) {
+						return _user$project$TodoController$AddNew;
+					}),
+				_1: {
+					ctor: '::',
+					_0: _user$project$TodoController$remove(_user$project$TodoController$RemoveTodo),
+					_1: {
+						ctor: '::',
+						_0: _user$project$TodoController$toggle(_user$project$TodoController$ToggleTodo),
+						_1: {ctor: '[]'}
+					}
+				}
+			}
+		});
+};
+var _user$project$TodoController$main = _elm_lang$html$Html$program(
+	{init: _user$project$TodoController$init, view: _user$project$TodoController$view, update: _user$project$TodoController$update, subscriptions: _user$project$TodoController$subscriptions})();

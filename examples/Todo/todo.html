@@ -1,0 +1,38 @@
+<html>
+    <head>
+        <title>Todo with Elm controller via Angular</title>
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+        <script src="../../node_modules/angular/angular.min.js"></script>
+
+        <script src="../../ng-elm.js"></script>
+        <script src="../../ng-elm-extend.js"></script>
+
+        <script src="../elm/deploy/todo.controller.js"></script>
+        <script src="../angular/elm-todo.controller.js"></script>
+    </head>
+    <body>
+        <div class="container" ng-app="ngElm">
+            <div ng-controller="TodoController as ctrl" class="row">
+                <div class="col-xs-4 well">
+                    <h2>Todo</h2>
+                    <input ng-model="ctrl.new"/>
+                    <button class="btn btn-primary" ng-click="ctrl.addNew(null)">Add</button>
+                    <ul class="list-group list-group-flush">
+                        <li class="list-group-item" ng-repeat="(i, todo) in ctrl.todos track by i">
+                            <span ng-click="ctrl.toggle(i)">
+                                {{todo.item}}
+                                <i class="glyphicon glyphicon-ok" ng-show="todo.done"></i>
+                                <button class="btn btn-info pull-right" ng-show="!todo.done" ng-click="ctrl.toggle(i)">
+                                    <i class="glyphicon glyphicon-ok"></i>
+                                </button>
+                                <button class="btn btn-warning pull-right" ng-click="ctrl.remove(i)">
+                                    <i class="glyphicon glyphicon-remove"></i>
+                                </button>
+                            </span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </body>
+</html>

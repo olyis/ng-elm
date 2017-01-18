@@ -76,10 +76,10 @@
 
         // (String, Any?) ~> {mode: String, sendPort: String?, subscribePort: String?, initial: Any?}
         function parsePortInterpretationImpl(value, initial) {
-            const fPattern = /^=>\s*([\w_]+)$/;
-            const wPattern = /^->\s*([\w_]+)$/;
-            const sPattern = /^<=\s*([\w_]+)$/;
-            const rPattern = /^<-\s*([\w_]+)$/;
+            const fPattern = /^=>\s*([\w_]+)?$/;
+            const wPattern = /^->\s*([\w_]+)?$/;
+            const sPattern = /^<=\s*([\w_]+)?$/;
+            const rPattern = /^<-\s*([\w_]+)?$/;
             const pPattern = /^([\w_]+)\s*<=>\s*([\w_]+)$/;
             const mPattern = /^([\w_]+)\s*<->\s*([\w_]+)$/;
             return $q(resolve => 
@@ -192,8 +192,9 @@
                                 break;
                         }
                     });
-                    if (errors.length) return $q.reject(errors);
-                    return $q.resolve(true);}));
+                    return (errors.length)
+                        ? $q.reject(errors)
+                        : $q.resolve(true);}));
             }];
         }
 
