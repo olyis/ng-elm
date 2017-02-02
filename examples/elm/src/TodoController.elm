@@ -6,8 +6,8 @@ import List exposing (..)
 -- input ports
 port set_new : (Item -> msg) -> Sub msg
 port add_new : (() -> msg) -> Sub msg
-port remove : (Index -> msg) -> Sub msg
-port toggle : (Index -> msg) -> Sub msg
+port remove_todo : (Index -> msg) -> Sub msg
+port toggle_todo : (Index -> msg) -> Sub msg
 
 -- output ports
 port output_list : List Todo -> Cmd msg
@@ -30,11 +30,11 @@ update : Msg -> Model -> (Model, Cmd Msg)
 update msg m =
     case msg of
         SetNew x ->
-            ({m | new = x}, output_new x)
+            ({m | new = x}, Cmd.none)
         AddNew ->
             let newTodos = (Todo m.new False)::m.todos in
-            let newM = {m | todos = newTodos, new = ""} in
-            (newM, output newM)
+            let newModel = {m | todos = newTodos, new = ""} in
+            (newModel, output newModel)
         RemoveTodo i ->
             let newTodos = removeAt i m.todos in
             ({m | todos = newTodos}, output_list newTodos)
@@ -55,8 +55,8 @@ subscriptions : Model -> Sub Msg
 subscriptions _ = Sub.batch
     [ set_new SetNew
     , add_new (\_ -> AddNew)
-    , remove RemoveTodo
-    , toggle ToggleTodo
+    , remove_todo RemoveTodo
+    , toggle_todo ToggleTodo
     ]
 
 removeAt : Int -> List a -> List a
@@ -65,13 +65,17 @@ removeAt i xs =
 
 toggleAt : Int -> List Todo -> List Todo
 toggleAt i xs =
-    List.indexedMap (toggleIf i) xs
+    List.indexedMap (forIndex i toggle) xs
 
 tailOrNone : List a -> List a
 tailOrNone xs = case tail xs of
     Nothing -> []
     Just tl -> tl
 
-toggleIf : Int -> Int -> Todo -> Todo
-toggleIf i j t =
-    if (i == j) then {t | done = not t.done} else t
+toggle : Todo -> Todo
+toggle t
+    = {t | done = not t.done}
+
+forIndex : Int -> (a -> a) -> Int -> a -> a
+forIndex i f j a =
+    if (i == j) then f a else a

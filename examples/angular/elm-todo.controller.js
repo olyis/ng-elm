@@ -6,10 +6,11 @@
             elm: 'TodoController',
             ports: {
                 addNew: "=> add_new",
-                remove: "=>",
-                toggle: "=>",
+                remove: "=> remove_todo",
+                toggle: "=> toggle_todo",
                 new: ["set_new <-> output_new", ''],
-                todos: "<- output_list"
+                todos: "<- output_list",
+                initialized: "<- $i"
             }
         };
     }]);

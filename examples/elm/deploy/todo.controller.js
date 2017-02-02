@@ -7791,12 +7791,15 @@ var _elm_lang$html$Html$summary = _elm_lang$html$Html$node('summary');
 var _elm_lang$html$Html$menuitem = _elm_lang$html$Html$node('menuitem');
 var _elm_lang$html$Html$menu = _elm_lang$html$Html$node('menu');
 
-var _user$project$TodoController$toggleIf = F3(
-	function (i, j, t) {
-		return _elm_lang$core$Native_Utils.eq(i, j) ? _elm_lang$core$Native_Utils.update(
-			t,
-			{done: !t.done}) : t;
+var _user$project$TodoController$forIndex = F4(
+	function (i, f, j, a) {
+		return _elm_lang$core$Native_Utils.eq(i, j) ? f(a) : a;
 	});
+var _user$project$TodoController$toggle = function (t) {
+	return _elm_lang$core$Native_Utils.update(
+		t,
+		{done: !t.done});
+};
 var _user$project$TodoController$tailOrNone = function (xs) {
 	var _p0 = _elm_lang$core$List$tail(xs);
 	if (_p0.ctor === 'Nothing') {
@@ -7809,7 +7812,7 @@ var _user$project$TodoController$toggleAt = F2(
 	function (i, xs) {
 		return A2(
 			_elm_lang$core$List$indexedMap,
-			_user$project$TodoController$toggleIf(i),
+			A2(_user$project$TodoController$forIndex, i, _user$project$TodoController$toggle),
 			xs);
 	});
 var _user$project$TodoController$removeAt = F2(
@@ -7829,8 +7832,8 @@ var _user$project$TodoController$add_new = _elm_lang$core$Native_Platform.incomi
 	'add_new',
 	_elm_lang$core$Json_Decode$null(
 		{ctor: '_Tuple0'}));
-var _user$project$TodoController$remove = _elm_lang$core$Native_Platform.incomingPort('remove', _elm_lang$core$Json_Decode$int);
-var _user$project$TodoController$toggle = _elm_lang$core$Native_Platform.incomingPort('toggle', _elm_lang$core$Json_Decode$int);
+var _user$project$TodoController$remove_todo = _elm_lang$core$Native_Platform.incomingPort('remove_todo', _elm_lang$core$Json_Decode$int);
+var _user$project$TodoController$toggle_todo = _elm_lang$core$Native_Platform.incomingPort('toggle_todo', _elm_lang$core$Json_Decode$int);
 var _user$project$TodoController$output_list = _elm_lang$core$Native_Platform.outgoingPort(
 	'output_list',
 	function (v) {
@@ -7865,13 +7868,12 @@ var _user$project$TodoController$update = F2(
 		var _p1 = msg;
 		switch (_p1.ctor) {
 			case 'SetNew':
-				var _p2 = _p1._0;
 				return {
 					ctor: '_Tuple2',
 					_0: _elm_lang$core$Native_Utils.update(
 						m,
-						{$new: _p2}),
-					_1: _user$project$TodoController$output_new(_p2)
+						{$new: _p1._0}),
+					_1: _elm_lang$core$Platform_Cmd$none
 				};
 			case 'AddNew':
 				var newTodos = {
@@ -7926,7 +7928,7 @@ var _user$project$TodoController$AddNew = {ctor: 'AddNew'};
 var _user$project$TodoController$SetNew = function (a) {
 	return {ctor: 'SetNew', _0: a};
 };
-var _user$project$TodoController$subscriptions = function (_p3) {
+var _user$project$TodoController$subscriptions = function (_p2) {
 	return _elm_lang$core$Platform_Sub$batch(
 		{
 			ctor: '::',
@@ -7934,15 +7936,15 @@ var _user$project$TodoController$subscriptions = function (_p3) {
 			_1: {
 				ctor: '::',
 				_0: _user$project$TodoController$add_new(
-					function (_p4) {
+					function (_p3) {
 						return _user$project$TodoController$AddNew;
 					}),
 				_1: {
 					ctor: '::',
-					_0: _user$project$TodoController$remove(_user$project$TodoController$RemoveTodo),
+					_0: _user$project$TodoController$remove_todo(_user$project$TodoController$RemoveTodo),
 					_1: {
 						ctor: '::',
-						_0: _user$project$TodoController$toggle(_user$project$TodoController$ToggleTodo),
+						_0: _user$project$TodoController$toggle_todo(_user$project$TodoController$ToggleTodo),
 						_1: {ctor: '[]'}
 					}
 				}

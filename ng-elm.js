@@ -82,6 +82,8 @@
             const rPattern = /^<-\s*([\w_]+)?$/;
             const pPattern = /^([\w_]+)\s*<=>\s*([\w_]+)$/;
             const mPattern = /^([\w_]+)\s*<->\s*([\w_]+)$/;
+            const ssPattern = /^<=\s*\$([\w_]+)$/;
+            const rrPattern = /^<-\s*\$([\w_]+)$/;
             return $q(resolve => 
                 resolve((() => {
                     var match;
@@ -97,8 +99,12 @@
                         return {mode: "<=>", sendPort: match[1], subscribePort: match[2]}
                     } else if (match = mPattern.exec(value)) {
                         return {mode: "<->", sendPort: match[1], subscribePort: match[2], initial}
+                    } else if (match = ssPattern.exec(value)) {
+                        return {mode: "<=" + match[1], initial}
+                    } else if (match = rrPattern.exec(value)) {
+                        return {mode: "<-" + match[1], initial}
                     } else {
-                        return {mode: "none"}
+                        return {mode: value}
                     }
                 })())
             );
@@ -181,10 +187,10 @@
                                 init.then(apply);
                                 break;
                             case '<=e':
-                                ctrl[key] = [];
                                 ctrl[key] = init.then(_ => []).catch($q.resolve);
                                 break;
                             case '<-e':
+                                ctrl[key] = [];
                                 init.catch(apply);
                                 break;
                             default:
