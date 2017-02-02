@@ -96,9 +96,9 @@
                     } else if (match = rPattern.exec(value)) {
                         return {mode: "<-", subscribePort: match[1], initial}
                     } else if (match = pPattern.exec(value)) {
-                        return {mode: "<=>", sendPort: match[1], subscribePort: match[2]}
+                        return {mode: "<=>", sendPort: match[2], subscribePort: match[1]}
                     } else if (match = mPattern.exec(value)) {
-                        return {mode: "<->", sendPort: match[1], subscribePort: match[2], initial}
+                        return {mode: "<->", sendPort: match[2], subscribePort: match[1], initial}
                     } else if (match = ssPattern.exec(value)) {
                         return {mode: "<=" + match[1], initial}
                     } else if (match = rrPattern.exec(value)) {

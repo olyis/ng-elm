@@ -8,7 +8,7 @@
                 addNew: "=> add_new",
                 remove: "=> remove_todo",
                 toggle: "=> toggle_todo",
-                new: ["set_new <-> output_new", ''],
+                new: ["output_new <-> set_new", ''],
                 todos: "<- output_list",
                 initialized: "<- $i"
             }
